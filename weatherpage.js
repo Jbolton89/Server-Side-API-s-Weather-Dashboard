@@ -7,7 +7,7 @@ var todayTemp = document.querySelector("#temperature");
 var todayWind = document.querySelector("#windspeed");
 var todayHumidity = document.querySelector("#humidity");
 var todayUv = document.querySelector("#uvindex");
-var todayIcon = document.getElementsByClassName("icon")
+var todayIcon = document.querySelector(".icon")
 var form = document.querySelector('form');
 var CityTitle = document.getElementById('card-title');
 var fivedayBodyEl = document.querySelectorAll('.fiveday-text')
@@ -15,7 +15,7 @@ var fivedayEl = document.querySelectorAll('.fiveday-card');
 var fivedayTitleEl = document.querySelectorAll(".fiveday-card-title")
 var todayCardTitleEl = document.querySelector(".card-title-today")
 
-var time = function () {
+function time() {
     $("#currentDay").text(moment().format('MMM Do YYYY, h:mm:ss a'));
 }
 setInterval(time, 1000);
@@ -69,7 +69,7 @@ function renderCitiesList() {
         pastCities.appendChild(li);
         li.setAttribute(
           "class",
-          "list-group-item bg-warning text-white"
+          "list-group-item bg-warning text-white justify-content-center"
         );
     
     }
@@ -143,21 +143,21 @@ var getWeather = function (lat,long, cityName) {
             response.json().then(function (data) { 
                 var currentDate = data.current.dt; 
                 todayCardTitleEl.innerHTML = 
-                    cityName + time(); 
-                todayIcon.src = "https://openweathermap.org/img/wn/" +
+                    cityName + " " + moment(currentDate, "X").format("(DD/MM/YYYY)") + "(Today)"; 
+                    todayIcon.src = "https://openweathermap.org/img/wn/" +
                     data.daily[0].weather[0].icon +
                     "@2x.png";
-                    console.log(response);
+                    console.log(todayIcon);
                     todayTemp.textContent = "Temp: " + data.current.temp + "C";
                     todayWind.textContent = "Wind: " + data.current.wind_speed + "km/h";
                     todayHumidity.textContent = "Humidity: " + data.current.humidity + " %"; 
                     todayUv.textcontent = "UV Index: " + data.current.uvi; 
                     if (data.current.uvi <= 3) { 
-                        todayUv.setAttribute("class", "px-3 bg-success")
+                        todayUv.setAttribute("class", "px-4 bg-success")
                     } else if (data.current.uvi <= 7 && data.current.uvi >= 4) { 
-                        todayUv.setAttribute("class", "px-3 bg-warning"); 
+                        todayUv.setAttribute("class", "px-4 bg-warning"); 
                     } else { 
-                        todayUv.setAttribute("class", "px-3 bg-danger");
+                        todayUv.setAttribute("class", "px-4 bg-danger");
                     }
 
                     for (var i = 0; i < fivedayEl.length; i++) {
