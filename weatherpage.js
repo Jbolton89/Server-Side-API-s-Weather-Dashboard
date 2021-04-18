@@ -1,43 +1,39 @@
 var forminputEl = document.querySelector('#form-input');
 var searchBtn = document.querySelector('.btn');
 var todayPanel = document.querySelector('.today-panel');
-var pastCities = document.getElementById('list-group');
+var pastCities = document.querySelector('.list-group');
 var cities = [];
-var cardTitleEl = document.getElementById('card-title')
-var todayTemp = document.querySelector(".temperature");
-var todayWind = document.querySelector(".windspeed");
-var todayHumidity = document.querySelector(".humidity");
-var todayUv = document.querySelector(".uvindex");
-var todayIcon = document.getElementById("icon")
+var todayTemp = document.querySelector("#temperature");
+var todayWind = document.querySelector("#windspeed");
+var todayHumidity = document.querySelector("#humidity");
+var todayUv = document.querySelector("#uvindex");
+var todayIcon = document.getElementsByClassName("icon")
 var form = document.querySelector('form');
 var CityTitle = document.getElementById('card-title');
 var fivedayBodyEl = document.querySelectorAll('.fiveday-text')
 var fivedayEl = document.querySelectorAll('.fiveday-card');
 var fivedayTitleEl = document.querySelectorAll(".fiveday-card-title")
+var todayCardTitleEl = document.querySelector(".card-title-today")
 
 var time = function () {
     $("#currentDay").text(moment().format('MMM Do YYYY, h:mm:ss a'));
 }
 setInterval(time, 1000);
 
-
-var apiKey = "40464402787ca1045c521f1a0c696abf";
-
 var handleErrors = function(response) { 
     if (!response.ok) {
         throw Error(response.statusText);
     }
     return response;
-
 }
 
 function init() {
-    var storedCities = JSON.parse(localStorage.getItem("pastCities"));
+    var storedCities = JSON.parse(localStorage.getItem("list-group"));
     if (storedCities !== null) {
-        cities = pastCities;
+        cities = storedCities;
     }
     renderCitiesList();
-}
+    }
 
 
 
@@ -58,21 +54,22 @@ form.addEventListener("submit", function (event) {
         return;
     } else {
         cities.push(cityName); 
-        localStorage.setItem("city-list",JSON.stringify(cities));
+        localStorage.setItem("list-group",JSON.stringify(cities));
         renderCitiesList();
         getLocation(cityName); 
+        console.log(localStorage);
     }
 });
 
 function renderCitiesList() {
+    pastCities.innerHTML = "";
     for (var i = 0; i < cities.length; i++) {
         var li = document.createElement("li");
+        li.textContent = cities[i];
         pastCities.appendChild(li);
-        li.innerHTML = li.innerHTML + pastCities[i];
-        li.setAttribute("data-search", pastCities[i]);
         li.setAttribute(
           "class",
-          "list-group-item bg-dark text-white"
+          "list-group-item bg-warning text-white"
         );
     
     }
@@ -106,10 +103,10 @@ function renderCitiesList() {
 
 
 
-function storeCities() {
-    localStorage.setItem("cities", JSON.stringify(cities));
-    console.log(localStorage);
-}
+// function storeCities() {
+//     localStorage.setItem("cities", JSON.stringify(cities));
+//     console.log(localStorage);
+// }
 
 
 // // When form is submitted 
@@ -140,25 +137,21 @@ var getLocation = function (cityName) {
 
 var getWeather = function (lat,long, cityName) {
     var weatherURL = 
-    "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-    lat +
-    "&lon=" +
-    long +
-    "&units=metric&appid=40464402787ca1045c521f1a0c696abf"; 
-
+    "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&units=metric&appid=40464402787ca1045c521f1a0c696abf"; 
     fetch(weatherURL).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) { 
                 var currentDate = data.current.dt; 
-                CityTitle.innerHTML = 
-                    cityName + time; 
+                todayCardTitleEl.innerHTML = 
+                    cityName + time(); 
                 todayIcon.src = "https://openweathermap.org/img/wn/" +
                     data.daily[0].weather[0].icon +
                     "@2x.png";
-                    todayTemp.textContent = data.current.temp + "C";
-                    todayWind.textContent = data.current.wind_speed + "km/h";
-                    todayHumidity.textContent = data.current.humidity + " %"; 
-                    todayUv.textcontent = data.current.uvi; 
+                    console.log(response);
+                    todayTemp.textContent = "Temp: " + data.current.temp + "C";
+                    todayWind.textContent = "Wind: " + data.current.wind_speed + "km/h";
+                    todayHumidity.textContent = "Humidity: " + data.current.humidity + " %"; 
+                    todayUv.textcontent = "UV Index: " + data.current.uvi; 
                     if (data.current.uvi <= 3) { 
                         todayUv.setAttribute("class", "px-3 bg-success")
                     } else if (data.current.uvi <= 7 && data.current.uvi >= 4) { 
@@ -167,7 +160,7 @@ var getWeather = function (lat,long, cityName) {
                         todayUv.setAttribute("class", "px-3 bg-danger");
                     }
 
-                    for (var i = 0; i < fivedayEl.length, i++) {
+                    for (var i = 0; i < fivedayEl.length; i++) {
                         fivedayBodyEl[i].innerHTML = "";
                         var date = data.daily[i + 1].dt; 
                         fivedayTitleEl[i].innerHTML = moment(date, "X").format("DD/MM/YYY"); 
@@ -180,11 +173,11 @@ var getWeather = function (lat,long, cityName) {
                         "@2x.png";
                         fiveTemp.innerHTML = "Temp: " + data.daily[i + 1].temp.day + " C"; 
                         fiveWind.innerHTML = "Wind: " + data.daily[i + 1].wind_speed + " km/h"; 
-                        fiveHumidity.innerHTML = "Humidity " + data.daily[i + 1].humidity + " %"; 
+                        fiveHumidity.innerHTML = "Humidity: " + data.daily[i + 1].humidity + " %"; 
                         fivedayBodyEl[i].appendChild(fiveIcon); 
                         fivedayBodyEl[i].appendChild(fiveTemp); 
                         fivedayBodyEl[i].appendChild(fiveWind); 
-                        fivedayBody[i].appendChild(fiveHumidity);
+                        fivedayBodyEl[i].appendChild(fiveHumidity);
                     }
                 });
         } else {alert("Error " + response.statusText); 
