@@ -5,4 +5,4 @@ A weather dashboard that allows you to search the weather of any city in the wor
 # URL
 https://jbolton89.github.io/Server-Side-API-s-Weather-Dashboard/
 
-![Screenshot of Weather Dashboard](./Assets/Snapshot2.JPG)
+![Screenshot of Weather Dashboard](./Assets/images/Snapshot2.JPG)
