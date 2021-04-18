@@ -37,15 +37,6 @@ function init() {
 
 
 
-
-
-
-
-
-
-
-
-
 // Event listener to push searched cities to local storage, render the cities in the list, and get the location of the city searched
 
 form.addEventListener("submit", function (event) {
@@ -76,46 +67,6 @@ function renderCitiesList() {
     
     }
 }
-// var formSubmitHandler = function(e){
-//     e.preventDefault();
-//     var city = SearchInputValue.value.trim();
-//     if(city){
-//         // change getCityWeather and get5Day to different
-//         getCityWeather(city);
-//         get5Day(city);
-//         cities.unshift({city});
-//         searchInputValue.value = "";
-//     } else {
-//         alert("You will need to Enter a valid city")
-//     }
-//     saveSearch(); 
-
-// }
-
-
-
-
-// var saveSearch = function(){
-//     localStorage.setItem("cities", JSON.stringify(cities));
-// 
-
-// Time periods using moment
-
-
-
-
-
-// function storeCities() {
-//     localStorage.setItem("cities", JSON.stringify(cities));
-//     console.log(localStorage);
-// }
-
-
-// // When form is submitted 
-// $('#form-input').on('click', function (event) {
-
-// }
-// )
 
 
 // Function to retriveve latitude an longitude, which is used by the function below, if not returns an error
@@ -190,36 +141,3 @@ var getWeather = function (lat,long, cityName) {
 };
  
 init();
-
-
-
-
-
-
-
-// Fetch formula to get API for today's weather (todayPanel)
-// function getTodayApi(e) {
-//     e.preventDefault();
-//     var searchInputValue = document.querySelector('#form-input').value;
-//     var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + searchInputValue + '&appid=40464402787ca1045c521f1a0c696abf';
-//     cities.push(searchInputValue).value;
-//     pastCities();
-//     renderCitiesList();
-
-//     fetch(apiUrl)
-//         .then(function (response) {
-//             return response.json();
-//         })
-//         .then(function (data) {
-//             console.log('Fetch Response \n--------------');
-//             console.log(data)
-//             for (var i = 0; i < data.length; i++){
-//                 var listItem = document.createElement('li');
-//                 listItem.textContent = data[i].value;
-//                 pastCities.appendChild(listItem);
-//                 }
-    
-//         });
-// }
-
-// searchBtn.addEventListener('click', getTodayApi);
