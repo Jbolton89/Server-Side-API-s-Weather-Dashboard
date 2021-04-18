@@ -15,18 +15,6 @@ var fivedayEl = document.querySelectorAll('.fiveday-card');
 var fivedayTitleEl = document.querySelectorAll(".fiveday-card-title")
 var todayCardTitleEl = document.querySelector(".card-title-today")
 
-function time() {
-    $("#currentDay").text(moment().format('MMM Do YYYY, h:mm:ss a'));
-}
-setInterval(time, 1000);
-
-var handleErrors = function(response) { 
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-    return response;
-}
-
 function init() {
     var storedCities = JSON.parse(localStorage.getItem("list-group"));
     if (storedCities !== null) {
