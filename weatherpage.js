@@ -9,7 +9,6 @@ var todayHumidity = document.querySelector("#humidity");
 var todayUv = document.querySelector("#uvindex");
 var todayIcon = document.querySelector(".icon")
 var form = document.querySelector('form');
-var CityTitle = document.getElementById('card-title');
 var fivedayBodyEl = document.querySelectorAll('.fiveday-text')
 var fivedayEl = document.querySelectorAll('.fiveday-card');
 var fivedayTitleEl = document.querySelectorAll(".fiveday-card-title")
