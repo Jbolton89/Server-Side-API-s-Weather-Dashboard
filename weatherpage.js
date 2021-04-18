@@ -46,6 +46,7 @@ function init() {
 
 
 
+// Event listener to push searched cities to local storage, render the cities in the list, and get the location of the city searched
 
 form.addEventListener("submit", function (event) {
     event.preventDefault(); 
@@ -61,6 +62,7 @@ form.addEventListener("submit", function (event) {
     }
 });
 
+// Creates a 'li' tag and appends the stored cities to the tag. 
 function renderCitiesList() {
     pastCities.innerHTML = "";
     for (var i = 0; i < cities.length; i++) {
@@ -116,7 +118,7 @@ function renderCitiesList() {
 // )
 
 
-// Function to retriveve latitude an longitude 
+// Function to retriveve latitude an longitude, which is used by the function below, if not returns an error
 var getLocation = function (cityName) {
     var requestURL = 
     "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + 
@@ -135,6 +137,7 @@ var getLocation = function (cityName) {
     });
 };
 
+// Main API calls to pull the various components (Temp, humidity, windspeed, and UV index) and display them within the containers
 var getWeather = function (lat,long, cityName) {
     var weatherURL = 
     "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&units=metric&appid=40464402787ca1045c521f1a0c696abf"; 
@@ -150,8 +153,9 @@ var getWeather = function (lat,long, cityName) {
                     console.log(todayIcon);
                     todayTemp.textContent = "Temp: " + data.current.temp + "C";
                     todayWind.textContent = "Wind: " + data.current.wind_speed + "km/h";
-                    todayHumidity.textContent = "Humidity: " + data.current.humidity + " %"; 
-                    todayUv.textcontent = "UV Index: " + data.current.uvi; 
+                    todayHumidity.textContent = "Humidity: " + data.current.humidity + " %";
+                    todayUv.textContent = "UV Index: ";
+                    todayUv.buttoncontent =  + data.current.uvi; 
                     if (data.current.uvi <= 3) { 
                         todayUv.setAttribute("class", "px-4 bg-success")
                     } else if (data.current.uvi <= 7 && data.current.uvi >= 4) { 
