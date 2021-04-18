@@ -10,6 +10,15 @@ var todayHumidity = document.querySelector(".humidity");
 var todayUv = document.querySelector(".uvindex");
 var todayIcon = document.getElementById("icon")
 var form = document.querySelector('form');
+var CityTitle = document.getElementById('card-title');
+var fivedayBodyEl = document.querySelectorAll('.fiveday-text')
+var fivedayEl = document.querySelectorAll('.fiveday-card');
+var fivedayTitleEl = document.querySelectorAll(".fiveday-card-title")
+
+var time = function () {
+    $("#currentDay").text(moment().format('MMM Do YYYY, h:mm:ss a'));
+}
+setInterval(time, 1000);
 
 
 var apiKey = "40464402787ca1045c521f1a0c696abf";
@@ -33,7 +42,7 @@ function init() {
 
 
 
-init();
+
 
 
 
@@ -92,10 +101,7 @@ function renderCitiesList() {
 // 
 
 // Time periods using moment
-var time = function () {
-    $("#currentDay").text(moment().format('MMM Do YYYY, h:mm:ss a'));
-}
-setInterval(time, 1000);
+
 
 
 
@@ -118,7 +124,7 @@ var getLocation = function (cityName) {
     var requestURL = 
     "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + 
     "&limit=1&appid=40464402787ca1045c521f1a0c696abf";
-    fetch(requestURL.then(function (response) {
+    fetch(requestURL).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
                 var long = data[0].lon;
@@ -129,9 +135,64 @@ var getLocation = function (cityName) {
         } else {
             alert("Error: " + response.statusText);
         }
-    }));
+    });
+};
+
+var getWeather = function (lat,long, cityName) {
+    var weatherURL = 
+    "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+    lat +
+    "&lon=" +
+    long +
+    "&units=metric&appid=40464402787ca1045c521f1a0c696abf"; 
+
+    fetch(weatherURL).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (data) { 
+                var currentDate = data.current.dt; 
+                CityTitle.innerHTML = 
+                    cityName + time; 
+                todayIcon.src = "https://openweathermap.org/img/wn/" +
+                    data.daily[0].weather[0].icon +
+                    "@2x.png";
+                    todayTemp.textContent = data.current.temp + "C";
+                    todayWind.textContent = data.current.wind_speed + "km/h";
+                    todayHumidity.textContent = data.current.humidity + " %"; 
+                    todayUv.textcontent = data.current.uvi; 
+                    if (data.current.uvi <= 3) { 
+                        todayUv.setAttribute("class", "px-3 bg-success")
+                    } else if (data.current.uvi <= 7 && data.current.uvi >= 4) { 
+                        todayUv.setAttribute("class", "px-3 bg-warning"); 
+                    } else { 
+                        todayUv.setAttribute("class", "px-3 bg-danger");
+                    }
+
+                    for (var i = 0; i < fivedayEl.length, i++) {
+                        fivedayBodyEl[i].innerHTML = "";
+                        var date = data.daily[i + 1].dt; 
+                        fivedayTitleEl[i].innerHTML = moment(date, "X").format("DD/MM/YYY"); 
+                        var fiveIcon = document.createElement("img"); 
+                        var fiveTemp = document.createElement("p");
+                        var fiveWind = document.createElement("p"); 
+                        var fiveHumidity = document.createElement("p"); 
+                        fiveIcon.src = "https://openweathermap.org/img/wn/" +
+                        data.daily[i + 1].weather[0].icon +
+                        "@2x.png";
+                        fiveTemp.innerHTML = "Temp: " + data.daily[i + 1].temp.day + " C"; 
+                        fiveWind.innerHTML = "Wind: " + data.daily[i + 1].wind_speed + " km/h"; 
+                        fiveHumidity.innerHTML = "Humidity " + data.daily[i + 1].humidity + " %"; 
+                        fivedayBodyEl[i].appendChild(fiveIcon); 
+                        fivedayBodyEl[i].appendChild(fiveTemp); 
+                        fivedayBodyEl[i].appendChild(fiveWind); 
+                        fivedayBody[i].appendChild(fiveHumidity);
+                    }
+                });
+        } else {alert("Error " + response.statusText); 
+    }
+    });
 };
  
+init();
 
 
 
